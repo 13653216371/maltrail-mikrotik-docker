@@ -7,9 +7,8 @@ RUN apt-get update \
     && git clone --depth=1 https://github.com/13653216371/maltrail.git /opt/maltrail \
     && python /opt/maltrail/core/update.py
     
-RUN apt install tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-&& echo "Asia/Shanghai" > /etc/timezone \
-&& apt remove tzdata
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+&& echo "Asia/Shanghai" > /etc/timezone
 
 RUN git clone https://github.com/thefloweringash/tzsp2pcap.git && cd /tzsp2pcap \
     && make
