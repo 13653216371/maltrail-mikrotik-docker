@@ -6,6 +6,9 @@ RUN apt-get update \
     && pip3 install pcapy-ng \
     && git clone --depth=1 https://github.com/stamparm/maltrail.git /opt/maltrail \
     && python /opt/maltrail/core/update.py
+    
+RUN apt install tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+&& echo "Asia/Shanghai" > /etc/timezone
 
 RUN git clone https://github.com/thefloweringash/tzsp2pcap.git && cd /tzsp2pcap \
     && make
@@ -17,7 +20,8 @@ RUN (crontab -l ; echo '*/1 * * * * if [ -n "$(ps -ef | grep -v grep | grep sens
 RUN (crontab -l ; echo '0 1 * * * cd /opt/maltrail && git pull') | crontab
 RUN (crontab -l ; echo '2 1 * * * /usr/bin/pkill -f maltrail') | crontab
 
-RUN PASS=$(openssl rand -base64 24) \
+#RUN PASS=$(openssl rand -base64 24) \
+RUN PASS=123456 \
     && HASH=$(echo -n $PASS | sha256sum | cut -d " " -f 1) \
     && sed -i "s/9ab3cd9d67bf49d01f6a2e33d0bd9bc804ddbe6ce1ff5d219c42624851db5dbc/$HASH/g" /opt/maltrail/maltrail.conf \
     && echo "password for web interface is $PASS and user is admin"
